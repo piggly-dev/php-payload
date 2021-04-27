@@ -2,6 +2,8 @@
 namespace Piggly\Payload;
 
 use Exception;
+use Piggly\Payload\Concerns\PayloadImportable;
+use Piggly\Payload\Concerns\PayloadValidable;
 use Piggly\Payload\Exceptions\InvalidDataException;
 use Piggly\Payload\Exceptions\JsonEncodingException;
 use Piggly\Payload\Interfaces\PayloadInterface;
@@ -15,11 +17,12 @@ use Piggly\Payload\Interfaces\PayloadInterface;
  * getAndRemove() and has().
  *
  * @since 1.0.0
+ * @since 1.0.2 New interfaces matching.
  * @package Piggly\Payload
  * @subpackage Piggly\Payload
  * @author Caique Araujo <caique@piggly.com.br>
  */
-abstract class PayloadArray implements PayloadInterface
+abstract class PayloadArray implements PayloadInterface, PayloadImportable, PayloadValidable
 {
 	/**
 	 * Payload data.
