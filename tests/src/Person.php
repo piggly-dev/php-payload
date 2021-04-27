@@ -20,10 +20,10 @@ class Person extends PayloadArray
 		$input = is_array( $input ) ? $input : json_decode($input, true);
 
 		$_map = [
-			'address' => 'setAddress',
 			'name' => 'setName',
 			'email' => 'setEmail',
-			'phone' => 'setPhone'
+			'phone' => 'setPhone',
+			'address' => 'setAddress'
 		];
 
 		return $this->_importArray($_map, $input);
