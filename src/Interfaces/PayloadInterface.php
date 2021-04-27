@@ -1,12 +1,19 @@
 <?php
 namespace Piggly\Payload\Interfaces;
 
-use ArrayAccess;
 use JsonSerializable;
 use Piggly\Payload\Exceptions\JsonEncodingException;
 use Piggly\Payload\Exceptions\InvalidDataException;
 use Serializable;
 
+/**
+ * A payload interface.
+ *
+ * @since 1.0.0
+ * @package Piggly\Payload
+ * @subpackage Piggly\Payload\Exceptions
+ * @author Caique Araujo <caique@piggly.com.br>
+ */
 interface PayloadInterface extends JsonSerializable, Serializable
 {
 	/**
@@ -15,7 +22,7 @@ interface PayloadInterface extends JsonSerializable, Serializable
 	 * 
 	 * @since 1.0.0
 	 * @return void
-	 * @throws InvalidDataException
+	 * @throws InvalidDataException When some data is invalid.
 	 */
 	public function validate ();
 
@@ -34,7 +41,9 @@ interface PayloadInterface extends JsonSerializable, Serializable
 	 * 
 	 * @param mixed $input
 	 * @since 1.0.0
+	 * @since 1.0.1 Throw InvalidDataException when some data is invalid.
 	 * @return self
+	 * @throws InvalidDataException When some imported data is invalid.
 	 */
 	public function import ( $input );
 

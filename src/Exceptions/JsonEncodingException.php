@@ -4,6 +4,15 @@ namespace Piggly\Payload\Exceptions;
 use Piggly\Payload\Interfaces\PayloadInterface;
 use RuntimeException;
 
+/**
+ * An exception which indicates payload cannot be
+ * parsed to json.
+ *
+ * @since 1.0.0
+ * @package Piggly\Payload
+ * @subpackage Piggly\Payload\Exceptions
+ * @author Caique Araujo <caique@piggly.com.br>
+ */
 class JsonEncodingException extends RuntimeException
 {
 	/**
