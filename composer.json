@@ -9,7 +9,7 @@
         "fields"
     ],
     "type": "library",
-    "homepage": "https://git.piggly.com.br/piggly/php-payload",
+    "homepage": "https://github.com/piggly-dev/php-payload",
     "autoload": {
         "psr-4": {
             "Piggly\\Payload\\": "src/"

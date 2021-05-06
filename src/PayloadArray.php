@@ -2,11 +2,13 @@
 namespace Piggly\Payload;
 
 use Exception;
+use JsonSerializable;
 use Piggly\Payload\Concerns\PayloadImportable;
 use Piggly\Payload\Concerns\PayloadValidable;
 use Piggly\Payload\Exceptions\InvalidDataException;
 use Piggly\Payload\Exceptions\JsonEncodingException;
 use Piggly\Payload\Interfaces\PayloadInterface;
+use Traversable;
 
 /**
  * A payloader as an smart array. $_payload is an array
@@ -18,6 +20,7 @@ use Piggly\Payload\Interfaces\PayloadInterface;
  *
  * @since 1.0.0
  * @since 1.0.2 New interfaces matching.
+ * @since 1.0.3 New interfaces matching.
  * @package Piggly\Payload
  * @subpackage Piggly\Payload
  * @author Caique Araujo <caique@piggly.com.br>
@@ -153,7 +156,7 @@ abstract class PayloadArray implements PayloadInterface, PayloadImportable, Payl
 	{
 		foreach ( $this->_payload as $key => $value )
 		{ 
-			if ( $value instanceof PayloadInterface )
+			if ( $value instanceof PayloadValidable )
 			{ $value->validate(); }
 		}
 	}
@@ -228,10 +231,16 @@ abstract class PayloadArray implements PayloadInterface, PayloadImportable, Payl
 		foreach ( $this->_payload as $key => $value )
 		{
 			if ( $value instanceof PayloadInterface )
-			{ 
-				$_array[$key] = $value->toArray();
-				continue;
-			}
+			{ $_array[$key] = $value->toArray(); continue; }
+
+			if ( $value instanceof JsonSerializable )
+			{ $_array[$key] = $value->jsonSerialize(); continue; }
+
+			if ( $value instanceof Traversable )
+			{ $_array[$key] = iterator_to_array($value); continue; }
+
+			if ( method_exists($value, 'toArray') )
+			{ $_array[$key] = $value->toArray(); continue; }
 
 			$_array[$key] = $value;
 		}

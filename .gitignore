@@ -66,6 +66,7 @@ vault.json
 .nyc_output
 .tscache
 .vscode
+*.cache
 
 # ---> Composer
 composer.phar
