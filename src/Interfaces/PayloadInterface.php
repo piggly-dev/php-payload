@@ -1,6 +1,7 @@
 <?php
 namespace Piggly\Payload\Interfaces;
 
+use ArrayAccess;
 use JsonSerializable;
 use Piggly\Payload\Exceptions\JsonEncodingException;
 use Serializable;

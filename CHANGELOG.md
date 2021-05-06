@@ -17,3 +17,7 @@ All notable changes to `piggly/php-payload` will be documented in this file.
 ## 1.0.3 - `2021-05-06`
 
 * Improvements to payload behaviors.
+
+## 1.0.4 - `2021-05-06`
+
+* Added magic methods.

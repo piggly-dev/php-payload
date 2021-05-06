@@ -68,10 +68,11 @@ abstract class PayloadArray implements PayloadInterface, PayloadImportable, Payl
 	 * 
 	 * @param string $key
 	 * @since 1.0.0
+	 * @since 1.0.4 Check if payload isset before remove
 	 * @return self
 	 */
 	protected function remove ( string $key )
-	{ unset($this->_payload[$key]); return $this; }
+	{ return $this->removeWhen( isset($this->_payload), $key ); }
 
 	/**
 	 * Remove a $key from payload data, only when $condition
@@ -264,7 +265,7 @@ abstract class PayloadArray implements PayloadInterface, PayloadImportable, Payl
 
 		return $json;
 	}
-  
+ 
 	/**
 	 * Prepare the resource for JSON serialization.
 	 *
@@ -292,4 +293,68 @@ abstract class PayloadArray implements PayloadInterface, PayloadImportable, Payl
 	 */
 	public function unserialize ( $data )
 	{ $this->_payload = \unserialize($data); } 
+
+	/**
+	 * Dynamically set attributes.
+	 * 
+	 * @param string $key
+	 * @param mixed $value
+	 * @since 1.0.4
+	 * @return mixed
+	 */
+	public function __set ( $key, $value )
+	{ 
+		$method = 'set'.$key;
+
+		if ( method_exists($this, $method) )
+		{ return $this->{$method}($value); }
+
+		return $this->add($key, $value); 
+	}
+
+	/**
+	 * Dynamically retrieve attributes.
+	 * 
+	 * @param string $key
+	 * @since 1.0.4
+	 * @return mixed
+	 */
+	public function __get ( $key )
+	{ 
+		$method = 'get'.$key;
+
+		if ( method_exists($this, $method) )
+		{ return $this->{$method}(); }
+
+		return $this->get($key); 
+	}
+
+	/**
+	 * Determine if an attribute exists on the Payload.
+	 *
+	 * @param string $key
+	 * @since 1.0.4
+	 * @return void
+	 */
+	public function __isset ( $key )
+	{ return $this->has($key); }
+
+	/**
+	 * Unset an attribute on the Payload.
+	 *
+	 * @param string $key
+	 * @since 1.0.4
+	 * @return void
+	 */
+	public function __unset ( $key )
+	{ $this->remove($key); }
+
+	/**
+	 * Convert the Payload to its string representation.
+	 *
+	 * @since 1.0.4
+	 * @return string
+	 */
+	public function __toString ()
+	{ return $this->toJson(); }
 }
