@@ -21,3 +21,7 @@ All notable changes to `piggly/php-payload` will be documented in this file.
 ## 1.0.4 - `2021-05-06`
 
 * Added magic methods.
+
+## 1.1.0 - `2021-05-17`
+
+* Created `PayloadMap` object.

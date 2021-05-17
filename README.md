@@ -8,6 +8,8 @@ This simples library cames to solve it. Payloads are tradicional `arrays` with m
 
 See below how it works.
 
+## PayloadArray
+
 ### The `Person` object:
 
 ```php
@@ -421,6 +423,102 @@ $_serialized = serialize($person);
 // Unserialize
 $_unserialized = unserialize($_serialized);
 ```
+
+## PayloadMap
+
+The `PayloadMap` class force to payload use a map. This mapping will strict define all fields allowed to payload and, even, fields validations. Each field inside a `PayloadMap` will be a `Field` object. The `Field` object will have following properties:
+
+Method | Description
+--- | ---
+`getKey()` | Field key name.
+`exportKeyAs()` and `getKeyToExport()` | Alias to field key name while exporting. (e.g. A field `country` may be exported as `country_id`).
+`value()` and `getValue()` | Field value.
+`label()` and `getLabel()` | Field label.
+`defaults()` and `getDefault()` | Field default value.
+`required()`, `optional()` and `isRequired()` | If field is required or optional.
+`acessible()`, `hidden()` and `isAcessible()` | If field is accessible or hidden.
+`allowsNull()`, `notAllowsNull()` and `isAllowingNull()` | If `NULL` is a valid value for field and it should accept it for exporting. (e.g. if `country` does not allows `NULL` and `country` is `NULL`, then it won't be exported).
+`validator()` | A `Respect\Validation\Validator` object to validate field value.
+`custom()` and `getCustom()` | To manager custom properties.
+
+There also methods:
+
+* `export()` will export field value;
+* `validate()` will return a `boolean` which validates field value;
+* `assert()` will throw an `InvalidDataException` if cannot validate field value;
+* `props()` set all props once; 
+* `back()` to navigation purpose it will goes back to `PayloadMap` object, since `Field` is inside one.
+
+Creating a `PayloadMap` works the same way as creating a `PayloadArray`, but it's required the `_map()` method, which will contains the mapping to fields:
+
+```php
+namespace Piggly\Dev\Payload;
+
+use Piggly\Payload\Exceptions\InvalidDataException;
+use Piggly\Payload\PayloadMap;
+use Respect\Validation\Validator as v;
+
+class PersonMap extends PayloadMap
+{
+	/**
+	 * This method is called at constructor.
+	 * You should use it to setup fields map
+	 * with add method.
+	 *
+	 * @since 1.0.5
+	 * @return void
+	 */
+	protected function _map ()
+	{
+		$this
+			->add('name')
+				->required()
+				->back()
+			->add('email')
+				->validator(v::email())
+				->required()
+				->back()
+			->add('phone')
+				->validator(v::phone())
+				->back()
+			->add('address')
+				->back();
+	}
+
+	/**
+	 * Import $input data to payload.
+	 * 
+	 * @param array $input
+	 * @param bool $ignoreInvalid Should ignore invalid data.
+	 * @since 1.0.0
+	 * @return self
+	 * @throws InvalidDataException
+	 */
+	public function import ( $input, $ignoreInvalid = true )
+	{
+		$input = is_array( $input ) ? $input : json_decode($input, true);
+		return $this->_importArray($input, $ignoreInvalid);
+	}
+
+	/**
+	 * Mutator for address.
+	 *
+	 * @param AddressMap|array $address Address.
+	 * @since 1.0.0
+	 * @return AddressMap
+	 */ 
+	protected function setterAddress ( $address ) : AddressMap
+	{
+		if ( !($address instanceof AddressMap) )
+		{ $address = (new AddressMap())->import($address); }
+
+		return $address;
+	}
+}
+```
+
+You may use `setter{key}()` and `getter{key}()` methods to mutate field value before set and after get. Mutators, be them setters or getters, should always return the value mutated.
+
 ## Changelog
 
 See the [CHANGELOG](CHANGELOG.md) file for information about all code changes.

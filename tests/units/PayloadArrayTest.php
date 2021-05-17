@@ -79,5 +79,6 @@ class PayloadArrayTest extends TestCase
 		$_person['phone'] = 'unknow';
 
 		$person = (new Person())->import($_person);
+		$person->validate();
 	}
 }
